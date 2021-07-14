@@ -1,0 +1,14 @@
+// memoization
+// js object, keys will be arg to fn, value will be return value
+
+const fib = (n, memo = {}) => {
+  if (n in memo) return memo[n];
+  if (n <= 2) return 1;
+  memo [n] = fib(n -1, meomo) + fib(n -2, memo);
+  return memo[n];
+}
+
+console.log(fib(6)); //8
+
+// Note: n = 6 result = 8. default n = 6 will be empty. n = 1 then will count 1, n = 2 then also count 1. n = 3 will be 2. all value of n will be
+//   save in "memo". therefore, if n = 4 will be n(3) + n(2) = 2+1 = 3. it will continue to count and save the n value to the default number of n
