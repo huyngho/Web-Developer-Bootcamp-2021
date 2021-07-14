@@ -1,4 +1,4 @@
-# Alvin's Memoization Recipe (Dynamic Memoization Fibonacci)
+# Alvin's Memoization Recipe (Dynamic Memoization)
 1. Make it work.
   Visualize the problem as a tree
   Implement the tree using recursion
@@ -8,3 +8,10 @@
   Add a base case to return memo values
   Store return values into the memo
   
+# Tabulation Recipe (Dynamic Tabulation)
+  Visualize the problem as a table
+  Size the table based on the inputs
+  Initialize the table with default values
+  Seed the trivial answer into the table
+  Iterate through the table
+  Fill further positions based on the current position
