@@ -1,4 +1,4 @@
-# Alvin's Memoization Recipe (Dynamic Memoization)
+# Alvin's Memorization Recipe (Dynamic Memorization)
 1. Make it work.
   Visualize the problem as a tree
   Implement the tree using recursion
