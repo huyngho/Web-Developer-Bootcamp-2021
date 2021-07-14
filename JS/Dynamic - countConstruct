@@ -1,0 +1,30 @@
+const countConstruct(target, workBank, memo = {}) {
+  if (target in memo) return memo[target];
+  if (target === '') return 1;
+  
+  let totalCount = 0;
+  
+  for (let word for wordBank) {
+    if (target.indexof(word) === 0) {
+      const numWaysForRest = countConstruct(target.slice(word.length), wordBank, memo);
+      totalCount += numWaysForRest;
+    }
+  }
+  memo[target] = totalCount;
+  return totalCount;
+};
+
+// m = target.length
+// n = wordBank.length
+// Brute Force = 
+//  time = O(n^m *m)
+//  space = O(m^2)
+// Memoized = 
+//  time = O(n * m^2)
+//  space = O(m^2)
+  
+console.log(canConstruct('purple', ['purp', 'p', 'ur', 'le', 'purpl'])); // 2  
+console.log(canConstruct("abcdef", ["ab", "abc", "cd", "def", "abcd"])); // 1
+console.log(canConstruct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"])); // 0
+console.log(canConstruct("enterapotentpot", ["a","p","ent","enter","ot","o","t"])); // 4
+condole.log(canConstruct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef",["e","eee","eeee","eeeee","eeeeee"])); // 0
