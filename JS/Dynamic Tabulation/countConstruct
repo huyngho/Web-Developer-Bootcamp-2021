@@ -1,0 +1,54 @@
+// Write a func 'countConstruct(target, wordBank)' that accepts a target string and an array of strings.
+// The func should return a number of ways that the 'target' can be constructed by concatenating elements of the 'wordBank' array.
+// You may reuse elements of 'wordBank' as many times as needed.
+
+// countConstruct(purple, [purp, p, ur, le, purpl]) -> 2
+//   0    1     2     3    4     5    6            // Note: length of table is target.length + 1 
+//|    |     |    |     |    |     |     |      
+
+// Let start with index 0 at countConstruct('',[...]) -> 1 
+//   0     1     2    3    4   5   6            
+//|  1  |  0  |  0 |  0  | 0 | 0 | 0 |       // Note: start with all index at 0
+
+// Look at anything begin with 'p', purp = 4 letters and p = 1 letter and purpl = 5 letter
+//   0     1     2    3    4   5   6            
+//|  1  |  1  |  0 |  0  | 1 | 1 | 0 |       // Note: add 1 to all the index from above start from index 0
+
+// From index 1, find anything begin with 'u', ur = 2 letter
+//   0     1     2    3    4   5   6            
+//|  1  |  1  |  0 |  1  | 1 | 1 | 0 |       // Note: add 1 to all the index from above start from index 1
+
+// From index 2 = 0, skip to next index, I will also skip 'r'
+// From index 3, find 'p' to go with 'le', p = 1 letter
+//   0     1     2    3    4   5   6            
+//|  1  |  1  |  0 |  1  | 2 | 1 | 0 |       // Note: add 1 value to the index next to index 3
+
+// Frp, index 4, find 'l' from 'le' , le = 2 letter
+//   0     1     2    3    4   5   6            
+//|  1  |  1  |  0 |  1  | 2 | 1 | 2 |       // Note: add 2 value to the index next to index 4
+// m = target                O(m^2 * n): time
+// n = wordBank.length       O(m): space
+
+// code:
+const canConstruct = (target, wordBank) => {
+  const table = Array(target.length + 1).fill(0);
+  table[0] = 1;
+  
+  for (let i = 0; i <= target.length; i++) {
+     for (let word of wordBank) {
+        if (target.slice(i, i + word.length) === word) {
+          table[i + word.length] += table[i]; //increment the value that store in the current position
+        }
+     }
+   
+  }
+  return table[target.length];
+};
+
+console.log(canConstruct("purple", [purp, p, ur, le, purpl])); // 2
+console.log(canConstruct("abcdef", ["ab", "abc", "cd", "def", "abcd"])); // 1
+console.log(canConstruct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"])); // 0
+console.log(canConstruct("enterapotentpot", ["a","p","ent","enter","ot","o","t"])); // 4
+condole.log(canConstruct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef",["e","eee","eeee","eeeee","eeeeee"])); // 0
+
+
