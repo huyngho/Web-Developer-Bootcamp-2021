@@ -1,0 +1,64 @@
+// Write a func 'howSum(targetSum, numbers)' that takes in a targetSum and an array of numbers as arguments.
+// The func should return an array containing any combination of elements that add up to exactly the targetSum.
+// If there is no combination that adds up to the targetSum, then return null.
+// If there are multiple combinations possible, you may return any single one.
+
+// howSum(7, [5,3,4]) -> [4, 3]
+//   0      1       2      3      4     5       6     7       // Note: length of table is targetSum + 1 
+//| null | null | null | null | null | null | null | null |   // Note: let all initial value in empty space = null
+
+// Let start with index 0 at canSum(0,[...]) -> [ ] empty array
+//   0      1      2      3      4     5       6     7       
+//| [ ] | null | null | null | null | null | null | null |   
+// Look at number 5 => 5 spaces ahead start from 0        
+//   0      1      2      3      4      5       6     7       
+//| [ ] | null | null | null | null | [ 5 ] | null | null | // copy the empty array and the number that took to get there = 5
+// Look at number 3 => 3 spaces ahead start from 0        
+//   0      1       2     3      4       5       6     7       
+//| [ ] | null | null | [ 3 ] | null | [ 5 ] | null | null | // copy the empty array and the number that took to get there = 3
+// Look at number 4 => 4 spaces ahead start from 0        
+//   0      1       2     3       4       5       6     7       
+//| [ ] | null | null | [ 3 ] | [ 4 ] | [ 5 ] | null | null | // copy the empty array and the number that took to get there = 6
+
+// From index 1, the value is null, I will move on to the next index
+// From index 2, the value is null, I will move on to the next index
+// From index 3, the value is [ 3 ], value 5 is over extented so I will start with 3 and 4.
+// Look at number 3 => 3 spaces ahead start from 0        
+//   0      1       2     3       4       5       6         7       
+//| [ ] | null | null | [ 3 ] | [ 4 ] | [ 5 ] | [ 3,3 ] | null | // copy the [ 3 ] array and the number that took to get there = 3
+// Look at number 4 => 4 spaces ahead start from 0        
+//   0      1       2     3       4       5       6          7       
+//| [ ] | null | null | [ 3 ] | [ 4 ] | [ 5 ] | [ 3,3 ] | [ 3,4 ] | // copy the [ 4 ] array and the number that took to get there = 4
+// From here value [3,4] is the answer however let the code to continue to run let see what will happen
+// From index 4, the value is [ 4 ], value 5 and 4 are over extented so I will only start with 3
+// Look at number 3 => 3 spaces ahead start from 0        
+//   0      1       2     3       4       5       6         7       
+//| [ ] | null | null | [ 3 ] | [ 4 ] | [ 5 ] | [ 3,3 ] | [ 4,3 ] | // copy the [ 4 ] array and the number that took to get there = 3
+
+// m = targetSum            O(m^2 * n): time
+// n = numbers.length       O(m^2): space
+
+// code:
+const howSum = (targetSum, numbers) => {
+  const table = Array(targetSum + 1).fill(null);
+  table[0] = [];
+  
+  for (let i = 0; i <= targetSum; i++) {
+    if (table[i] !== null) {
+      for (let num of numbers) {
+        table[i + num] = [ ...table[i], num ];
+      }
+    }
+  }
+  return table[targetSum];
+};  
+
+console.log(canSum(7, [2, 3])); // [3, 2, 2]
+console.log(canSum(7, [5, 3, 4, 7])); // [4, 3]
+console.log(canSum(7, [2, 4])); // null
+console.log(canSum(8, [2, 3, 5])); // [2, 2, 2, 2]
+console.log(canSum(300, [7, 14])); // null
+
+
+
+
