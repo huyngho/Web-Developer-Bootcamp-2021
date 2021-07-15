@@ -1,0 +1,46 @@
+// Write a func 'canSum(targetSum, numbers)' that takes in a targetSum and an array of numbers as arguments.
+// The func should return a boolean indicating whether or not it is possivle to generate the targetSum using numbers from the array
+// You may use an element of the array as many times as needed
+// You may assume that all input numbers are nonnegative
+
+// canSum(7, [5,3,4]) -> true
+//  0   1   2   3   4   5   6   7       
+//| F | F | F | F | F | F | F | F |   
+
+// Let start with index 0 at canSum(0,[...]) -> true
+//  0   1   2   3   4   5   6   7       
+//| T | F | F | F | F | F | F | F | 
+// Look at number 5 => 5 spaces ahead start from 0         Then number 3 => start from 0             Then number 4 => start from 0
+//  0   1   2   3   4   5   6   7                           0   1   2   3   4   5   6   7             0   1   2   3   4   5   6   7  
+//| T | F | F | F | F | T | F | F |                       | T | F | F | T | F | T | F | F |         | T | F | F | T | T | T | F | F |
+
+// From index 1, the value is F. If there is a False value at current position, I can move on to the next one.
+// From index 2, the value is F. next
+// From index 3, the value is T. the value of 5 is over extented so I dont need to look at that. move on to 3, 4
+// Then number 3 => start from 3            Then number 4 => start from 3
+//  0   1   2   3   4   5   6   7            0   1   2   3   4   5   6   7             
+//| T | F | F | T | T | T | T | T |        | T | F | F | T | T | T | T | T |     
+
+// m = targetSum            O(mn): time
+// n = numbers.length       O(m): space
+
+// Code: 
+const canSum = (targetSum, numbers) => {
+  const table = Array(targetSum + 1).fill(false);
+  table[0] = true;
+  console.log(table);
+  for (let i = 0; i <= targetSum; i++) {
+    if (table[i] === true) {
+      for (let num of numbers) {
+        table[i + num] = true;
+      }
+    }
+  }
+  return table[targetSum];    
+};
+
+console.log(canSum(7, [2, 3])); // true
+console.log(canSum(7, [5, 3, 4, 7])); // true
+console.log(canSum(7, [2, 4])); // false
+console.log(canSum(8, [2, 3, 5])); // true
+console.log(canSum(300, [7, 14])); // false
