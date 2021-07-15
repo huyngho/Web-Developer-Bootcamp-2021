@@ -1,0 +1,94 @@
+// Write a func 'bestSum(targetSum, numbers)' that takes in a targetSum and an array of numbers as arguments.
+// The func should return an array containing the shortest combination of numbers that add up to exactly the targetSum.
+// If there is a tie for the shortest combination, you may return any one of the shortest.
+
+// bestSum(8, [2, 3, 5]) -> [3, 5]
+//   0      1      2      3      4     5       6     7       8
+//| null | null | null | null | null | null | null | null | null |
+
+// Let start with index 0 at canSum(0,[...]) -> []
+//   0      1      2      3      4     5       6     7       8
+//| [ ] | null | null | null | null | null | null | null | null |
+// Look at number 2 => 2 spaces ahead start from 0
+//   0      1      2      3      4     5       6     7       8
+//| [ ] | null |  [2]  | null | null | null | null | null | null | // copy the empty array and the number that took to get there = 2
+// Look at number 3 => 3 spaces ahead start from 0
+//   0      1      2      3      4     5       6     7       8
+//| [ ] | null |  [2]  | [3] | null | null | null | null | null | // copy the empty array and the number that took to get there = 3
+// Look at number 5 => 5 spaces ahead start from 0
+//   0      1      2      3      4     5       6     7       8
+//| [ ] | null |  [2]  | [3] | null | [5] | null | null | null | // copy the empty array and the number that took to get there = 5
+
+// From index 1, value is null, skip to next index
+// From index 2, value is [2], no extented number
+// Look at number 2 => 2 spaces ahead start from 2
+//   0      1      2      3      4     5       6     7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [5] | null | null | null | // copy the [2] array and the number that took to get there = 2
+// Look at number 3 => 3 spaces ahead start from 2
+//   0      1      2      3      4       5       6     7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [2,3] | null | null | null | // copy the [2] array and the number that took to get there = 3
+// Look at number 5 => 5 spaces ahead start from 2
+//   0      1      2      3      4       5       6     7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [2,3] | null | [2,5] | null | // copy the [2] array and the number that took to get there = 5
+
+// From index 3, value is [3], no extented number
+// Look at number 2 => 2 spaces ahead start from 3
+//   0      1      2      3      4       5       6     7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [3,2] | null | null | null | // copy the [3] array and the number that took to get there = 2
+// Look at number 3 => 3 spaces ahead start from 3
+//   0      1      2      3      4       5       6     7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [3,2] | [3,3] | null | null | // copy the [3] array and the number that took to get there = 3
+// Look at number 5 => 5 spaces ahead start from 3
+//   0      1      2      3      4       5       6       7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [2,3] | [3,3] | [2,5] | [3,5] | // copy the [3] array and the number that took to get there = 5
+
+// From index 4, value is [2,2], value 5 is over extented, let see 2,3
+// Look at number 2 => 2 spaces ahead start from 4
+//   0      1      2      3      4       5       6         7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [3,2] | [2,2,2] | [2,5] | [3,5] | // copy the [2,2] array and the number that took to get there = 2
+// Look at number 3 => 3 spaces ahead start from 4
+//   0      1      2      3      4       5       6          7        8
+//| [ ] | null |  [2]  | [3] | [2,2] | [3,2] | [2,2,2] | [2,2,3] | [3,5] | // copy the [2,2] array and the number that took to get there = 3
+
+// From index 5, value is [3,2], value 5 is over extented, let see 2,3
+// Look at number 2 => 2 spaces ahead start from 5
+//   0      1      2      3      4       5       6         7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [3,2] | [2,2,2] | [3,2,2] | [3,5] | // copy the [3,2] array and the number that took to get there = 2
+// Look at number 3 => 3 spaces ahead start from 5
+//   0      1      2      3      4       5       6          7        8
+//| [ ] | null |  [2]  | [3] | [2,2] | [3,2] | [2,2,2] | [3,2,2] | [3,2,3] | // copy the [3,2] array and the number that took to get there = 3
+
+// From index 6, value is [2,2,2], value 5, 3 is over extented, let see 2
+// Look at number 2 => 2 spaces ahead start from 5
+//  0      1      2      3      4       5       6         7          8
+//|[ ]| null |  [2]  | [3] | [2,2] | [3,2] | [2,2,2] | [3,2,2] | [2,2,2,2] | // copy the [2,2,2] array and the number that took to get there = 2
+
+// From all the result, I need to search for the shortest array value => final table is 
+//   0      1      2      3      4       5       6       7       8
+//| [ ] | null |  [2]  | [3] | [2,2] | [3,2] | [3,3] | [2,5] | [3,5] |
+// m = targetSum            O(m^2 * n): time
+// n = numbers.length       O(m^2): space
+
+// code:
+const bestSum = (targetSum, numbers) => {
+  const table = Array(targetSum + 1).fill(null);
+  table[0] = [];
+  
+  for (let i = 0; i <= targetSum; i++) {
+    if (table[i] !== null) {
+      for (let num of numbers) {
+        const combination = [ ...table[i], num ];
+        // if this current combination is shorter than what is already stored
+        if (!table[i + num] || table[i + num].length > combination.length) {  //!table[i+num] not count with table value is null or undefine
+          table[i + num] = combination;
+        }
+      }
+    }
+  }
+  return table[targetSum];
+};
+
+console.log(canSum(7, [5, 3, 4, 7])); // [7]
+console.log(canSum(8, [2, 3, 5])); // [3, 5]
+console.log(canSum(8, [1, 4, 5])); // [4, 4]
+console.log(canSum(100, [1, 2, 5, 25])); // [25, 25, 25, 25]
