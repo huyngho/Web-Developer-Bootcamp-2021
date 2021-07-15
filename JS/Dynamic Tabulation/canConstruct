@@ -1,0 +1,57 @@
+// Write a func 'canConstruct(target, wordBank)' that accepts a target string and an array of strings.
+// The func should return a boolean indicating whether or not the 'target' can be constructed by concatenating elements of the 'wordBank' array.
+// You may reuse elements of 'wordBank; as many times as needed.
+
+// canConstruct(abcdef, [ab, abc, cd, def, abcd]) -> true
+//   0    1     2      3      4       5       6            // Note: length of table is target.length + 1 
+//|    |  a  |  ab |  abc  | abcd | abcde | abcdef |       // Note: start with index 0 = 0, 1 = a, 2 = ab, ... , 6 = abcdef
+
+// Let start with index 0 at canSum('',[...]) -> true   // when array has empty string always true
+//   0     1     2    3    4   5   6            
+//|  T  |  F  |  F |  F  | F | F | F |       // Note: start with all index at False
+
+// Look at 1 and 3, ab and cd both have 2 letter => move over 2 index
+//   0     1     2    3    4   5   6            
+//|  T  |  F  |  T |  F  | F | F | F |      // Note: ab, cd = 2 value index and copy T from index 0
+// Look at 2 and 4, abc and def both have 3 letter => move over 3 index
+//   0     1     2    3    4   5   6            
+//|  T  |  F  |  T |  T  | F | F | F |      // Note: abc, def = 3 value index and copy T from index 0
+// Look at 5, abcd both have 4 letter => move over 4 index
+//   0     1     2    3    4   5   6            
+//|  T  |  F  |  T |  T  | T | F | F |      // Note: abc, def = 4 value index and copy T from index 0
+
+// From index 1 = F, move on to next index
+// From index 2 = T also = ab, I will skip both ab , abc and start count cd has 2 letter => move over 2 index 
+//   0     1     2    3    4   5   6            
+//|  T  |  F  |  T |  T  | T | F | F |      // Note: However index 4 is T so I am done from looking
+
+// From index 3 = T also = abc, I will skip anything with abc, and start with def has 3 letter => move over 3 index
+//   0     1     2    3    4   5   6            
+//|  T  |  F  |  T |  T  | T | F | T |      // Note: move over 3 index from 3 = 6 => T
+
+// From index 4,5,6 nothing change too much however index 6 is True => that should be the answer. index 5 is False so nothing will add to abcde to be true
+// m = target                O(m^2 * n): time
+// n = wordBank.length       O(m): space
+
+// code:
+const canConstruct = (target, wordBank) => {
+  const table = Array(target.length + 1).fill(false);
+  table[0] = true;
+  
+  for (let i = 0; i <= target.length; i++) {
+    if (table[i] === true) {
+      for (let word of wordBank) {
+        // if the word matches the characters starting at position i
+        if (target.slice(i, i + word.length) === word) {
+          table[i + word.length] = true;
+        }
+      }
+    }
+  }
+  return table[target.length];
+};
+
+console.log(canConstruct("abcdef", ["ab", "abc", "cd", "def", "abcd"])); // true
+console.log(canConstruct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"])); // false
+console.log(canConstruct("enterapotentpot", ["a","p","ent","enter","ot","o","t"])); // true
+condole.log(canConstruct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef",["e","eee","eeee","eeeee","eeeeee"])); // false
