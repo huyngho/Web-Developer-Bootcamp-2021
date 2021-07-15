@@ -23,15 +23,15 @@
 // From index 1, the value is null, I will move on to the next index
 // From index 2, the value is null, I will move on to the next index
 // From index 3, the value is [ 3 ], value 5 is over extented so I will start with 3 and 4.
-// Look at number 3 => 3 spaces ahead start from 0        
+// Look at number 3 => 3 spaces ahead start from 3        
 //   0      1       2     3       4       5       6         7       
 //| [ ] | null | null | [ 3 ] | [ 4 ] | [ 5 ] | [ 3,3 ] | null | // copy the [ 3 ] array and the number that took to get there = 3
-// Look at number 4 => 4 spaces ahead start from 0        
+// Look at number 4 => 4 spaces ahead start from 3        
 //   0      1       2     3       4       5       6          7       
 //| [ ] | null | null | [ 3 ] | [ 4 ] | [ 5 ] | [ 3,3 ] | [ 3,4 ] | // copy the [ 4 ] array and the number that took to get there = 4
 // From here value [3,4] is the answer however let the code to continue to run let see what will happen
 // From index 4, the value is [ 4 ], value 5 and 4 are over extented so I will only start with 3
-// Look at number 3 => 3 spaces ahead start from 0        
+// Look at number 3 => 3 spaces ahead start from 3        
 //   0      1       2     3       4       5       6         7       
 //| [ ] | null | null | [ 3 ] | [ 4 ] | [ 5 ] | [ 3,3 ] | [ 4,3 ] | // copy the [ 4 ] array and the number that took to get there = 3
 
