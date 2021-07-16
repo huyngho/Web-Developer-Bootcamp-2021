@@ -1,0 +1,57 @@
+// Write a func 'allConstruct(target, wordBank)' that accepts a target string and an array of strings.
+// The func should return a 2D array containing 'all of the ways' that the 'target' can be constructed by concatenating elements of the 'wordBank'
+//    array. Each element of the 2D array should represent one combination that constructs the 'target'.
+// You may reuse elements of 'wordBank; as many times as needed.
+
+// allConstruct(abcdef, [ab, abc, cd, def, abcd, ef, c])
+//   0    1     2      3      4       5       6            // Note: length of table is target.length + 1 
+//|    |  a  |  ab |  abc  | abcd | abcde | abcdef |       // Note: start with index 0 = 0, 1 = a, 2 = ab, ... , 6 = abcdef
+
+// Let start with index 0 at allConstruct('',[...]) -> [[]]
+//   0      1      2     3     4    5    6           
+//| [[]] |  []  |  [] |  []  | [] | [] | [] |       // Note: let start with all as an empty array and index 0 as empty combination array
+
+// Index 0, check all with begin of 'a' = ab, abc, abcd
+//   0      1         2         3           4       5   6           
+//| [[]] |  []  |  [[ab]] |  [[abc]]  | [[abcd]] | [] | [] |    // Note: from index 0, each letter will increment and add the letter
+
+// Index 1, check all begin with 'b' = none
+// Index 2, check all begin with 'c' = cd, c
+//   0      1         2           3               4             5    6           
+//| [[]] |  []  |  [[ab]] |  [[abc][ab,c]]  | [[abcd][ab,cd]] | [] | [] |    // Note: from index 2, each letter will increment and add the letter
+
+// Index 3, check all begin with 'd' = def
+//   0      1         2           3               4             5             6           
+//| [[]] |  []  |  [[ab]] |  [[abc][ab,c]]  | [[abcd][ab,cd]] | [] | [[abc,def][ab,c,def]] |
+
+
+// Index 4, check all begin with 'e' = ef
+//   0      1         2           3               4             5                       6           
+//| [[]] |  []  |  [[ab]] |  [[abc][ab,c]]  | [[abcd][ab,cd]] | [] | [[abc,def][ab,c,def][abcd,ef][ab,cd,ef]]
+
+// m = target.length               O(n^m): time
+// n = wordBank.length             O(n^m): space
+
+// code:
+const allConstruct = (abcdef, [ab, abc, cd, def, abcd, ef, c]) => {
+  const table = Array(target.length + 1)
+      .fill()
+      .map(() => []);
+  table[0] = [[]];
+  
+  for (let i = 0; i <= target.length; i++) {
+    for (let word for wordBank) {
+      if (target.slice(i, i + word.length) === word) {
+        const newCombinations = table[i].map(subArray => [ ...subArray, word ]); // add current word to the current position
+        table[i + word.length].push(...newCombinations);                         // add to the next position
+      }
+    }  
+  }
+  return table[target.length];
+};
+
+console.log(allConstruct('purple', ['purp', 'p', 'ur', 'le', 'purpl'])); // [ ['purp', 'le']['p','ur','p','le'] ]   
+console.log(allConstruct("abcdef", ["ab", "abc", "cd", "def", "abcd"])); // [ ['ab','cd','ef']['ab','c','def']['abc','def']['abcd','ef'] ] 
+console.log(allConstruct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"])); // []
+condole.log(allConstruct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef",["e","eee","eeee","eeeee","eeeeee"])); // []
+
