@@ -15,3 +15,10 @@
   Seed the trivial answer into the table
   Iterate through the table
   Fill further positions based on the current position
+
+# Dynamic Programming
+  Notice any overlapping subproblems
+  Decide what is the trivially smallest input
+  Think recursively to use Memorization
+  Think iteratively to use Tabulation
+  Draw a strategy first!!!
